@@ -1,0 +1,34 @@
+# Flask and Mongo
+from flask import Flask, jsonify
+from pymongo.mongo_client import MongoClient
+
+# OpenAI
+from openai import OpenAI
+import instructor
+
+# Env
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+from completion import CompletionService
+from repository import Repository
+
+
+class Factory:
+    def __init__(self):
+        self.app = Flask(__name__)
+        # Create App must be called first, since Flask_Mongo couples flask and mongo
+        db_uri = os.environ["MONGO_DB_URL"]
+        self.mongo_client = MongoClient(db_uri)
+        self.instructor_client = instructor.patch(OpenAI())
+
+    def create_app(self):
+        return self.app
+
+    def create_repo(self):
+        return Repository(self.mongo_client)
+
+    def create_completion(self):
+        return CompletionService(self.instructor_client)
