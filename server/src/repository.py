@@ -1,19 +1,5 @@
 from typing import List
-
-from pydantic import BaseModel, Field
-
-
-class CodeSnippet(BaseModel):
-    snippet: str
-    language: str
-
-
-class DAO(BaseModel):
-    _id: str
-    title: str
-    url: str
-    content: str
-    codeSnippets: List[CodeSnippet]
+from models import DAO
 
 
 class Repository:

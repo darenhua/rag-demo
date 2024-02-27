@@ -4,14 +4,7 @@ import os
 
 load_dotenv()
 
-from pydantic import BaseModel, Field
-
-
-class Extraction(BaseModel):
-    answer: str = Field(description="The concise answer to the prompt.")
-    keywords: List[str] = Field(
-        description="List of one or two word keywords related to the answer."
-    )
+from models import Extraction
 
 
 class CompletionService:
@@ -34,3 +27,7 @@ class CompletionService:
                 {"role": "user", "content": content},
             ],
         )
+
+    def getEmbeddings(self, query: str):
+        res = self.client.embeddings.create(input=query, model="text-embedding-3-small")
+        return res.data[0].embedding
